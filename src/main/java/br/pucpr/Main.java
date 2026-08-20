@@ -6,10 +6,12 @@ import static br.pucpr.planet.PlanetType.ICE;
 import static br.pucpr.user.Theme.LIGHT;
 
 import br.pucpr.planet.Planet;
-import br.pucpr.planet.PlanetasPrinter;
+import br.pucpr.planet.PlanetTable;
+import br.pucpr.table.Table;
+import br.pucpr.table.TableData;
 import br.pucpr.user.Theme;
 import br.pucpr.user.User;
-import br.pucpr.user.UsersPrinter;
+import br.pucpr.user.UserTable;
 import java.util.ArrayList;
 
 public class Main {
@@ -24,9 +26,14 @@ public class Main {
     usuarios.add(new User(105L, "Lucas Mendes", "lucas@email.com", "12345"));
     usuarios.add(new User(106L, "", "beatriz@email.com", "55566677788"));
 
+    final var usuariosTable = new ArrayList<TableData>();
+    for (var usuario : usuarios) {
+      usuariosTable.add(new UserTable(usuario, true));
+    }
+
     System.out.println("IMPRIMINDO USUARIOS");
     System.out.println("-------------------");
-    new UsersPrinter().print(usuarios, true, true, LIGHT);
+    new Table().print(usuariosTable, true, LIGHT);
 
     final var planetas = new ArrayList<Planet>();
     planetas.add(new Planet("Mercúrio", 4879, 57_910_000L, ROCK));
@@ -38,9 +45,15 @@ public class Main {
     planetas.add(new Planet("Urano", 51118, 2_870_990_000L, ICE));
     planetas.add(new Planet("Netuno", 49528, 4_504_300_000L, ICE));
     planetas.add(new Planet("Plutão", 2376, 5_906_380_000L, DWARF));
+
+    final var planetasTable = new ArrayList<TableData>();
+    for (var planeta : planetas) {
+      planetasTable.add(new PlanetTable(planeta));
+    }
+
     System.out.println();
     System.out.println("IMPRIMINDO PLANETAS");
     System.out.println("-------------------");
-    new PlanetasPrinter().print(planetas, false, Theme.NORMAL);
+    new Table().print(planetasTable, false, Theme.NORMAL);
   }
 }
