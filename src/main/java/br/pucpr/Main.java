@@ -9,6 +9,7 @@ import br.pucpr.planet.Planet;
 import br.pucpr.planet.PlanetsTableData;
 import br.pucpr.table.Table;
 import br.pucpr.table.model.ColumnTableData;
+import br.pucpr.table.model.PagedTableData;
 import br.pucpr.user.CpfColumn;
 import br.pucpr.user.EmailColumn;
 import br.pucpr.user.IdColumn;
@@ -52,5 +53,30 @@ public class Main {
     System.out.println("IMPRIMINDO PLANETAS");
     System.out.println("-------------------");
     new Table(new PlanetsTableData(planetas)).print();
+
+    System.out.println();
+    System.out.println("IMPRIMINDO PLANETAS PAGINADOS");
+    System.out.println("-----------------------------");
+    final var paginado = new PagedTableData(new PlanetsTableData(planetas), 4);
+    final var tabela = new Table(paginado);
+    do {
+      System.out.printf("Página %d de %d%n", paginado.getPage() + 1, paginado.pageCount());
+      tabela.print();
+    } while (paginado.next());
+
+    System.out.println();
+    System.out.println("IMPRIMINDO USUARIOS PAGINADOS");
+    System.out.println("-----------------------------");
+    final var usuariosPaginados =
+        new PagedTableData(
+            new ColumnTableData<User>(
+                usuarios, new IdColumn(), new NameColumn(), new CpfColumn(), new EmailColumn()),
+            2);
+    final var tabelaUsuarios = new Table(usuariosPaginados, LIGHT);
+    usuariosPaginados.last();
+    System.out.printf(
+        "Última página (%d de %d)%n",
+        usuariosPaginados.getPage() + 1, usuariosPaginados.pageCount());
+    tabelaUsuarios.print();
   }
 }
