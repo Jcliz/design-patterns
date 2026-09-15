@@ -7,6 +7,7 @@ import static br.pucpr.table.Theme.LIGHT;
 
 import br.pucpr.planet.Planet;
 import br.pucpr.planet.PlanetaColumns;
+import br.pucpr.table.StatusBar;
 import br.pucpr.table.Table;
 import br.pucpr.table.TableBuilder;
 import br.pucpr.table.model.ColumnTableData;
@@ -66,5 +67,19 @@ public class Main {
                         "Distance (au)",
                         p -> "%,11.2f".formatted(Planet.kmToAu(p.sunDistanceKm()))))
         .print();
+    System.out.println();
+    System.out.println("OBSERVER: A TABELA SE REDESENHA SOZINHA");
+    System.out.println("--------------------------------------");
+
+    final var planetData =
+        new ColumnTableData<Planet>(new ArrayList<Planet>(), PlanetaColumns.values());
+
+    final var observedTable = new Table(planetData, LIGHT);
+    observedTable.setAutoRedraw(true);
+    planetData.addListener(new StatusBar("Planetas"));
+
+    planetData.addAll(planetas);
+    planetData.remove(planetData.rowCount() - 1);
+    planetData.add(new Planet("Ceres", 939, 413_700_000L, DWARF));
   }
 }

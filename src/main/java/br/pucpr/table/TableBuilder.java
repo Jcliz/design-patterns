@@ -11,6 +11,7 @@ public class TableBuilder {
   private TableData data;
   private Theme theme = Theme.NORMAL;
   private boolean alignRight = false;
+  private boolean autoRedraw = false;
 
   public TableBuilder withTheme(Theme theme) {
     this.theme = theme;
@@ -23,6 +24,11 @@ public class TableBuilder {
 
   public TableBuilder dark() {
     return withTheme(Theme.DARK);
+  }
+
+  public TableBuilder autoRedraw() {
+    this.autoRedraw = true;
+    return this;
   }
 
   public TableBuilder rightAligned() {
@@ -45,6 +51,8 @@ public class TableBuilder {
     if (this.data == null) {
       throw new IllegalStateException("Call a data setting method first!");
     }
-    return new Table(data, theme, alignRight);
+    final var table = new Table(data, theme, alignRight);
+    table.setAutoRedraw(autoRedraw);
+    return table;
   }
 }

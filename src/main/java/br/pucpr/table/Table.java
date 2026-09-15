@@ -1,19 +1,22 @@
 package br.pucpr.table;
 
 import br.pucpr.table.model.TableData;
+import br.pucpr.table.model.TableDataListener;
 import br.pucpr.table.reflection.Column;
 import java.util.ArrayList;
 
-public final class Table {
+public final class Table implements TableDataListener {
   private TableData data;
   private Theme theme;
   private boolean alignRight;
+  private boolean autoRedraw;
 
   public Table(TableData data, Theme theme, boolean alignRight) {
     if (data == null) {
       throw new IllegalArgumentException("Data cannot be null");
     }
     this.data = data;
+    this.data.addListener(this);
     setTheme(theme);
     this.alignRight = alignRight;
   }
@@ -31,7 +34,28 @@ public final class Table {
   }
 
   public void setData(TableData data) {
+    if (data == null) {
+      throw new IllegalArgumentException("Data cannot be null");
+    }
+    this.data.removeListener(this);
     this.data = data;
+    this.data.addListener(this);
+    dataChanged(data);
+  }
+
+  public boolean isAutoRedraw() {
+    return autoRedraw;
+  }
+
+  public void setAutoRedraw(boolean autoRedraw) {
+    this.autoRedraw = autoRedraw;
+  }
+
+  @Override
+  public void dataChanged(TableData source) {
+    if (autoRedraw) {
+      redraw();
+    }
   }
 
   public Theme getTheme() {
@@ -56,6 +80,10 @@ public final class Table {
 
   public void print() {
     System.out.print(this);
+  }
+
+  public void redraw() {
+    print();
   }
 
   private String headerLine() {

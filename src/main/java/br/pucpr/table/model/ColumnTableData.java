@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class ColumnTableData<T> implements TableData {
+public class ColumnTableData<T> extends AbstractTableData {
   private final List<ColumnData<? super T>> columns;
   private final List<T> data;
 
@@ -39,5 +39,37 @@ public class ColumnTableData<T> implements TableData {
   public String get(int row, int col) {
     var line = data.get(row);
     return columns.get(col).get(line);
+  }
+
+  public void add(T line) {
+    data.add(line);
+    fireDataChanged();
+  }
+
+  public void addAll(Collection<? extends T> lines) {
+    if (lines.isEmpty()) return;
+    data.addAll(lines);
+    fireDataChanged();
+  }
+
+  public void set(int row, T line) {
+    data.set(row, line);
+    fireDataChanged();
+  }
+
+  public void remove(int row) {
+    data.remove(row);
+    fireDataChanged();
+  }
+
+  public void clear() {
+    if (data.isEmpty()) return;
+    data.clear();
+    fireDataChanged();
+  }
+
+  public void addColumn(ColumnData<? super T> column) {
+    columns.add(column);
+    fireDataChanged();
   }
 }
